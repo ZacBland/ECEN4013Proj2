@@ -7,37 +7,22 @@ BAUD=9600
 class UART:
     def __init__(self) -> None:
         self.ser = serial.Serial("/dev/ttyS0", baudrate=9600)
-        print("waiting for UART connection...")
-
-        received_data = self.ser.read()
-        sleep(0.03)
-        data_left = self.ser.inWaiting() 
-        received_data += self.ser.read(data_left)
-        string = received_data.decode('utf-8')
-        print(string)
-        if string != "pc_connect\0":
-            raise Exception("Error in recieving connection from pi.")
-        sleep(0.2)
-        self.ser.write("pi_connect\0".encode('utf-8')) 
-        sleep(1)
-        print("Connected to PC.")
 
     running = True
     def loop(self, data):
+        count = 1
         while self.running:
-            self.ser.write(data["sat_count"].encode('utf-8')) 
+            gps = ",".join(["gps",str(data["sat_count"]),str(data["lat"]),str(data["long"]),str(data["ele"])])
+            self.ser.write((gps).encode("utf-8")) 
             sleep(0.1)
-            self.ser.write(data["lat"].encode('utf-8')) 
+            acc = ",".join(["acc",str(data["acc"][0]),str(data["acc"][1]),str(data["acc"][2])])
+            self.ser.write((acc).encode("utf-8")) 
             sleep(0.1)
-            self.ser.write(data["long"].encode('utf-8')) 
+            mag = ",".join(["mag",str(data["mag"][0]),str(data["mag"][1]),str(data["mag"][2])])
+            self.ser.write((mag).encode("utf-8")) 
             sleep(0.1)
-            self.ser.write(data["ele"].encode('utf-8')) 
-            sleep(0.1)
-            self.ser.write(data["acc"].encode('utf-8')) 
-            sleep(0.1)
-            self.ser.write(data["mag"].encode('utf-8')) 
-            sleep(0.1)
-            self.ser.write(data["vel"].encode('utf-8')) 
+            vel = ",".join(["vel",str(data["vel"][0]),str(data["vel"][1]),str(data["vel"][2])])
+            self.ser.write((vel).encode("utf-8")) 
             sleep(0.1)
 
     def stop(self):
