@@ -1,22 +1,22 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QGridLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QGridLayout, QVBoxLayout
 from PyQt5.QtGui import *
-from PyQt5.Qt  import *
+from PyQt5 import QtCore
 
 class GPS(QWidget):
     def __init__(self):
         super().__init__()
 
         self.layout = QVBoxLayout()
-        self.layout.addWidget(QLabel("GPS"), alignment=Qt.AlignCenter)
+        self.layout.addWidget(QLabel("GPS"), alignment=QtCore.Qt.AlignCenter)
 
         self.grid = QGridLayout()
-        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: green;')
 
-        self.grid.addWidget(QLabel("Satellites:"), 0, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Latitude:"), 1, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Longitude:"), 2, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Elevation (TYPE):"), 3, 0, alignment=Qt.AlignRight)
+        self.grid.addWidget(QLabel("Satellites:"), 0, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Latitude:"), 1, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Longitude:"), 2, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Elevation (M):"), 3, 0, alignment=QtCore.Qt.AlignRight)
 
         self.sat_label = QLabel("Looking for Satellites...")
         self.lat_label = QLabel("-")

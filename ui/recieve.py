@@ -50,7 +50,3 @@ class UART:
             data_left = self.ser.inWaiting() 
             received_data += self.ser.read(data_left)
             print(received_data.decode("utf-8"))
-
-
-
-UART()

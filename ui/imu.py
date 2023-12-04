@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QGridLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QGridLayout, QVBoxLayout
 from PyQt5.QtGui import *
-from PyQt5.Qt import *
+from PyQt5 import QtCore
 
 
 class IMU(QWidget):
@@ -8,25 +8,25 @@ class IMU(QWidget):
         super().__init__()
 
         self.layout = QVBoxLayout()
-        self.layout.addWidget(QLabel("IMU"), alignment=Qt.AlignCenter)
+        self.layout.addWidget(QLabel("IMU"), alignment=QtCore.Qt.AlignCenter)
 
         self.grid = QGridLayout()
-        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: #8B8000;')
 
-        self.grid.addWidget(QLabel("X Acceleration:"), 0, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Acceleration:"), 1, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Acceleration:"), 2, 0, alignment=Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Acceleration:"), 0, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Acceleration:"), 1, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Acceleration:"), 2, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel(""), 3, 0)
 
-        self.grid.addWidget(QLabel("X Magnetic Field:"), 4, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Magnetic Field:"), 5, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Magnetic Field:"), 6, 0, alignment=Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Magnetic Field:"), 4, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Magnetic Field:"), 5, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Magnetic Field:"), 6, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel(""), 7, 0)
 
-        self.grid.addWidget(QLabel("X Angular Velocity:"), 8, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Angular Velocity:"), 9, 0, alignment=Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Angular Velocity:"), 10, 0, alignment=Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Angular Velocity:"), 8, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Angular Velocity:"), 9, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Angular Velocity:"), 10, 0, alignment=QtCore.Qt.AlignRight)
 
         self.x_acc_lab = QLabel("-")
         self.y_acc_lab = QLabel("-")
@@ -57,5 +57,15 @@ class IMU(QWidget):
         self.setLayout(self.layout)
 
     def update(self, data: dict):
-        pass
+        self.x_acc_lab.setText(str(data["acc"][0]))
+        self.y_acc_lab.setText(str(data["acc"][1]))
+        self.z_acc_lab.setText(str(data["acc"][2]))
+
+        self.x_mag_lab.setText(str(data["mag"][0]))
+        self.y_mag_lab.setText(str(data["mag"][1]))
+        self.z_mag_lab.setText(str(data["mag"][2]))
+
+        self.x_vel_lab.setText(str(data["vel"][0]))
+        self.y_vel_lab.setText(str(data["vel"][1]))
+        self.z_vel_lab.setText(str(data["vel"][2]))
 
