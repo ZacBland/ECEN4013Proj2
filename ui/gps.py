@@ -33,9 +33,13 @@ class GPS(QWidget):
         self.setLayout(self.layout)
 
     def update(self, data: dict):
-        if self.sat_label.text() != "Looking for Satellites...":
-            self.setStyleSheet('background-color: green;')
+
+        if(data["lat"] == "." or data["lat"] == 0.0):
+            return
+
         self.sat_label.setText(str(data["sat_count"]))
         self.lat_label.setText(str(data["lat"]))
         self.long_label.setText(str(data["long"]))
         self.ele_label.setText(str(data["ele"]))
+        if self.sat_label.text() != "Looking for Satellites...":
+            self.setStyleSheet('background-color: green;')
