@@ -14,19 +14,19 @@ class IMU(QWidget):
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         self.setStyleSheet('background-color: #8B8000;')
 
-        self.grid.addWidget(QLabel("X Acceleration:"), 0, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Acceleration:"), 1, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Acceleration:"), 2, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Acceleration (m/s^2):"), 0, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Acceleration (m/s^2):"), 1, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Acceleration (m/s^2):"), 2, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel(""), 3, 0)
 
-        self.grid.addWidget(QLabel("X Magnetic Field:"), 4, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Magnetic Field:"), 5, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Magnetic Field:"), 6, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Magnetic Field (uT):"), 4, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Magnetic Field (uT):"), 5, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Magnetic Field (uT):"), 6, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel(""), 7, 0)
 
-        self.grid.addWidget(QLabel("X Angular Velocity:"), 8, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Y Angular Velocity:"), 9, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Z Angular Velocity:"), 10, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("X Angular Velocity (rps):"), 8, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Y Angular Velocity (rps):"), 9, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Z Angular Velocity (rps):"), 10, 0, alignment=QtCore.Qt.AlignRight)
 
         self.x_acc_lab = QLabel("-")
         self.y_acc_lab = QLabel("-")

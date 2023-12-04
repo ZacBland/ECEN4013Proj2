@@ -11,12 +11,12 @@ class GPS(QWidget):
 
         self.grid = QGridLayout()
         self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
-        self.setStyleSheet('background-color: green;')
+        self.setStyleSheet('background-color: darkred;')
 
         self.grid.addWidget(QLabel("Satellites:"), 0, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel("Latitude:"), 1, 0, alignment=QtCore.Qt.AlignRight)
         self.grid.addWidget(QLabel("Longitude:"), 2, 0, alignment=QtCore.Qt.AlignRight)
-        self.grid.addWidget(QLabel("Elevation (M):"), 3, 0, alignment=QtCore.Qt.AlignRight)
+        self.grid.addWidget(QLabel("Elevation MSL (m):"), 3, 0, alignment=QtCore.Qt.AlignRight)
 
         self.sat_label = QLabel("Looking for Satellites...")
         self.lat_label = QLabel("-")
@@ -33,6 +33,8 @@ class GPS(QWidget):
         self.setLayout(self.layout)
 
     def update(self, data: dict):
+        if self.sat_label.text() != "Looking for Satellites...":
+            self.setStyleSheet('background-color: green;')
         self.sat_label.setText(str(data["sat_count"]))
         self.lat_label.setText(str(data["lat"]))
         self.long_label.setText(str(data["long"]))

@@ -78,6 +78,7 @@ class Worker(QObject):
             "vel": (0.0,0.0,0.0)
         }
 
+        all_zeros = True
         while True:
             received_data = ser.read()
             sleep(0.03)
@@ -98,7 +99,11 @@ class Worker(QObject):
             elif info[0] == "vel":
                 gui_dict["vel"] = (info[1],info[2],info[3])
 
-            self.update_gps.emit(gui_dict)
+            if not all_zeros:
+                self.update_gps.emit(gui_dict)
+            else:
+                if gui_dict["lat"] != 0.0:
+                    all_zeros = False
     
 
         
