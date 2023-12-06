@@ -1,16 +1,15 @@
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
+from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
 from .imu import IMU
-from .recieve import UART
 
 import serial
 import sys
 import glob
 from serial.tools.list_ports import comports
 from time import sleep
-import json
 from .gps import GPS
 
 
@@ -23,16 +22,25 @@ class Context(QMainWindow):
         self.central_widget.setFocus()
         self.setCentralWidget(self.central_widget)
 
-        self.setMinimumSize(400,400)
-
-        main_layout = QVBoxLayout(self.central_widget)
-        main_layout.setAlignment(QtCore.Qt.AlignCenter)
+        self.main_layout = QVBoxLayout(self.central_widget)
+        self.main_layout.setAlignment(QtCore.Qt.AlignCenter)
+        self.setStyleSheet(''' font-size: 24px; ''')
+        self.setMinimumSize(200,200)
+        self.display_btn = QPushButton("Start Display")
+        self.start = True
+        self.display_btn.setFlat(False)
+        self.display_btn.setFixedHeight(50)
+        self.display_btn.pressed.connect(self.start_display)
+        self.display_btn.setStyleSheet("background-color : green") 
+        self.main_layout.addWidget(self.display_btn)
 
         self.gps = GPS()
-        main_layout.addWidget(self.gps)
+        self.gps.setVisible(False)
+        self.main_layout.addWidget(self.gps)
 
         self.imu = IMU()
-        main_layout.addWidget(self.imu)
+        self.imu.setVisible(False)
+        self.main_layout.addWidget(self.imu)
 
         self.thread = QThread()
         self.worker = Worker()
@@ -42,7 +50,27 @@ class Context(QMainWindow):
 
         self.thread.started.connect(self.worker.do_work)
         self.thread.start()
-        self.test = None
+
+    def start_display(self):
+        if self.start:
+            self.start = False
+            self.gps.setVisible(True)
+            self.imu.setVisible(True)
+            self.display_btn.setStyleSheet("background-color : red") 
+            self.display_btn.setText("End Display")
+            self.adjustSize()
+            self.worker.restart()
+
+        else:
+            self.start = True
+            self.gps.setVisible(False)
+            self.imu.setVisible(False)
+            self.display_btn.setStyleSheet("background-color : green") 
+            self.display_btn.setText("Start Display")
+            self.adjustSize()
+            self.worker.stop()
+    
+    
 
 
     def update(self, gui_dict):        
@@ -54,11 +82,13 @@ class Worker(QObject):
 
     def __init__(self, parent=None):
         QObject.__init__(self, parent=parent)
+        self.running = False
         #self.parent = parent
 
     def do_work(self):
         
         print("Connecting...")
+        print(get_port()[0])
         ser = None
         while ser is None:
             try:
@@ -79,27 +109,37 @@ class Worker(QObject):
         }
 
         while True:
-            received_data = ser.read()
-            sleep(0.03)
-            data_left = ser.inWaiting() 
-            received_data += ser.read(data_left)
-            received_data = received_data.decode("utf-8")
+            try:
+                while not self.running:
+                    pass
+                received_data = ser.read()
+                sleep(0.03)
+                data_left = ser.inWaiting() 
+                received_data += ser.read(data_left)
+                received_data = received_data.decode("utf-8")
 
-            info = received_data.split(',')
-            if info[0] == "gps":
-                gui_dict["sat_count"] = info[1]
-                gui_dict["lat"] = info[2]
-                gui_dict["long"] = info[3]
-                gui_dict["ele"] = info[4]
-            elif info[0] == "acc":
-                gui_dict["acc"] = (info[1],info[2],info[3])
-            elif info[0] == "mag":
-                gui_dict["mag"] = (info[1],info[2],info[3])
-            elif info[0] == "vel":
-                gui_dict["vel"] = (info[1],info[2],info[3])
+                info = received_data.split(',')
+                if info[0] == "gps":
+                    gui_dict["sat_count"] = info[1]
+                    gui_dict["lat"] = info[2]
+                    gui_dict["long"] = info[3]
+                    gui_dict["ele"] = info[4]
+                elif info[0] == "acc":
+                    gui_dict["acc"] = (info[1],info[2],info[3])
+                elif info[0] == "mag":
+                    gui_dict["mag"] = (info[1],info[2],info[3])
+                elif info[0] == "vel":
+                    gui_dict["vel"] = (info[1],info[2],info[3])
 
-            self.update_gps.emit(gui_dict)
+                self.update_gps.emit(gui_dict)
+            except Exception as e:
+                print("Error:",e)
     
+    def stop(self):
+        self.running = False
+
+    def restart(self):
+        self.running = True
 
         
 def get_port():
