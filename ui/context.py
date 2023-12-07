@@ -105,7 +105,8 @@ class Worker(QObject):
             "ele": 0.0,
             "acc": (0.0,0.0,0.0),
             "mag": (0.0,0.0,0.0),
-            "vel": (0.0,0.0,0.0)
+            "vel": (0.0,0.0,0.0),
+            "ori": (0.0,0.0,0.0)
         }
 
         while True:
@@ -130,6 +131,8 @@ class Worker(QObject):
                     gui_dict["mag"] = (info[1],info[2],info[3])
                 elif info[0] == "vel":
                     gui_dict["vel"] = (info[1],info[2],info[3])
+                elif info[0] == "ori":
+                    gui_dict["ori"] = (info[1],info[2],info[3])
 
                 self.update_gps.emit(gui_dict)
             except Exception as e:
