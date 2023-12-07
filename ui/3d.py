@@ -190,10 +190,9 @@ class read_thread():
                 info = received_data.split(',')
                 if info[0] == "ori":
                     if(info[1] != 'None'):
-                        print(float(info[3]))
-                        setattr(self.parent, "theta", float(info[1]))
-                        setattr(self.parent, "phi", float(info[2]))
-                        setattr(self.parent, "e", float(info[3]))
+                        setattr(self.parent, "theta", -float(info[1]))
+                        setattr(self.parent, "phi", float(info[3]))
+                        setattr(self.parent, "e", float(info[2]))
 
             except Exception as e:
                 print("Error:",e)

@@ -119,22 +119,30 @@ class Worker(QObject):
                 received_data += ser.read(data_left)
                 received_data = received_data.decode("utf-8")
 
+
+                
+                
                 info = received_data.split(',')
-                if info[0] == "gps":
-                    gui_dict["sat_count"] = info[1]
-                    gui_dict["lat"] = info[2]
-                    gui_dict["long"] = info[3]
-                    gui_dict["ele"] = info[4]
-                elif info[0] == "acc":
-                    gui_dict["acc"] = (info[1],info[2],info[3])
-                elif info[0] == "mag":
-                    gui_dict["mag"] = (info[1],info[2],info[3])
-                elif info[0] == "vel":
-                    gui_dict["vel"] = (info[1],info[2],info[3])
+                if info[4] == "gps":
+                    gui_dict["sat_count"] = info[5]
+                    gui_dict["lat"] = info[6]
+                    gui_dict["long"] = info[7]
+                    gui_dict["ele"] = info[8]
+                elif info[4] == "acc":
+                    if(info[5] != 'None'):
+                        gui_dict["acc"] = (info[5],info[6],info[7])
+                elif info[4] == "mag":
+                    if(info[5] != 'None'):
+                        gui_dict["mag"] = (info[5],info[6],info[7])
+                elif info[4] == "vel":
+                    if(info[5] != 'None'):
+                        gui_dict["vel"] = (info[5],info[6],info[7])
                 elif info[0] == "ori":
                     gui_dict["ori"] = (info[1],info[2],info[3])
+                
 
                 self.update_gps.emit(gui_dict)
+
             except Exception as e:
                 print("Error:",e)
     
